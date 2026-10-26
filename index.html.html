@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ЭТП Страхование</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>🏛️ ЭТП Страхование</h1>
+    <div class="role-switch">
+      <button id="btn-client" class="active" onclick="switchRole('client')">Кабинет Клиента</button>
+      <button id="btn-insurer" onclick="switchRole('insurer')">Кабинет Страховщика</button>
+    </div>
+  </header>
+
+  <!-- КАБИНЕТ КЛИЕНТА -->
+  <div id="view-client" class="view">
+    <div class="grid-2">
+      <!-- Создание тендера -->
+      <div class="card">
+        <h2>1. Создание тендера</h2>
+        
+        <div class="step">
+          <h3>Шаг 1: Реестр ТС</h3>
+          <p class="hint">Загрузите CSV файл (Марка;Модель;VIN;Год;Мощность;Сумма)</p>
+          <input type="file" id="fileRegistry" accept=".csv">
+          <button onclick="uploadRegistry()">Загрузить и распарсить</button>
+          <div id="registryPreview" class="table-wrap"></div>
+        </div>
+
+        <div class="step">
+          <h3>Шаг 2: Опции страхования</h3>
+          <div id="optionsList" class="options-list"></div>
+        </div>
+
+        <div class="step">
+          <h3>Шаг 3: Бюджет и СК</h3>
+          <label>Максимальный бюджет, ₽ <input type="number" id="budget" value="1000000"></label>
+          <label>Страховые компании (через запятую, пусто = все)</label>
+          <input type="text" id="targetInsurers" placeholder="СК ПАРИ, АльфаСтрахование">
+          <button onclick="createTender()">🚀 Сформировать Тендер</button>
+        </div>
+      </div>
+
+      <!-- Список тендеров и Сводный КП -->
+      <div class="card">
+        <h2>Мои тендеры</h2>
+        <div id="clientTenderList" class="tender-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- КАБИНЕТ СТРАХОВЩИКА -->
+  <div id="view-insurer" class="view" style="display:none">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Журнал тендеров</h2>
+        <div id="insurerTenderList" class="tender-list"></div>
+      </div>
+
+      <!-- Форма заполнения КП (Скриншот) -->
+      <div class="card" id="offerFormCard" style="display:none">
+        <h2>Предпросмотр тарифов (КП)</h2>
+        <p class="hint" id="offerTenderTitle"></p>
+        <form id="offerForm" onsubmit="submitOffer(event)">
+          <input type="hidden" id="offerTenderId">
+          <label>Страховщик <input type="text" id="insurerName" value="СК ПАРИ" readonly></label>
+          
+          <div class="grid-2-form">
+            <label>Страховая сумма (КАСКО) <input type="number" id="oSum" value="5000000"></label>
+            <label>Премия КАСКО <input type="number" id="oKasko" value="150000"></label>
+            <label>Франшиза <input type="number" id="oFranchise" value="15000"></label>
+            <label>Премия ОСАГО <input type="number" id="oOsago" value="10000"></label>
+            <label>Итоговая премия <input type="number" id="oPrice" value="160000"></label>
+            <label>Срок выплаты (дней) <input type="number" id="oDays" value="10"></label>
+            <label>Рейтинг (0.6 - 1.0) <input type="number" step="0.1" id="oRating" value="0.8"></label>
+          </div>
+          <button type="submit" style="margin-top:1rem">📤 Отправить КП</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
